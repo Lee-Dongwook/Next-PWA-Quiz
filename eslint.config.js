@@ -56,6 +56,9 @@ export default [
       'no-undef': 'off',
       'no-unused-vars': 'off',
       'no-redeclare': 'off',
+      'no-empty': 'off',
+      'no-cond-assign': 'off',
+      'no-func-assign': 'off',
     },
   },
 ];
