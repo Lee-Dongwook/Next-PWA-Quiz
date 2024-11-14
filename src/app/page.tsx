@@ -1,8 +1,16 @@
+'use client';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    router.push('/dashboard');
+  };
+
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-4 bg-background">
       <h1 className="text-2xl font-bold text-foreground mb-4 text-center">
@@ -18,7 +26,7 @@ export default function HomePage() {
           placeholder="Enter your name"
           className="mb-3 text-sm"
         />
-        <Button variant="default" className="w-full">
+        <Button variant="default" className="w-full" onClick={handleGetStarted}>
           Get Started
         </Button>
       </Card>
