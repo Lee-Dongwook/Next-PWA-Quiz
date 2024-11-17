@@ -1,6 +1,8 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useTimer } from '@/hooks/useTimer';
+import { useQuizStore } from '@/store/quizStore';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -21,13 +23,30 @@ const sampleQuestions = [
 
 export default function QuizPage({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const { setResults } = useQuizStore();
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [results, setQuizResults] = useState<any[]>([]);
+
+  const timeLeft = useTimer(600, () => {
+    router.push('/results');
+  });
+
   const question = sampleQuestions[currentQuestion];
 
   const handleNext = () => {
+    const isCorrect = selectedOption === question.answer;
+
+    setQuizResults((prev) => [
+      ...prev,
+      { question: question.question, isCorrect },
+    ]);
+
     if (currentQuestion < sampleQuestions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
+      setSelectedOption(null);
     } else {
+      setResults(results);
       router.push('/results');
     }
   };
@@ -44,13 +63,23 @@ export default function QuizPage({ params }: { params: { id: string } }) {
         </h2>
         <div className="space-y-2">
           {question.options.map((option, index) => (
-            <Button key={index} variant="secondary" className="w-full">
+            <Button
+              key={index}
+              variant={selectedOption === option ? 'default' : 'secondary'}
+              className="w-full"
+              onClick={() => setSelectedOption(option)}
+            >
               {option}
             </Button>
           ))}
         </div>
-        <Button variant="default" className="w-full mt-4" onClick={handleNext}>
-          Next
+        <Button
+          variant="default"
+          className="w-full mt-4"
+          onClick={handleNext}
+          disabled={!selectedOption}
+        >
+          {currentQuestion < sampleQuestions.length - 1 ? 'Next' : 'Finish'}
         </Button>
       </Card>
     </main>
