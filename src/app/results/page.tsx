@@ -28,6 +28,20 @@ export default function ResultsPage() {
     router.push('/quiz');
   };
 
+  const handleShareResults = () => {
+    const shareText = `I scored ${correctAnswers} out of ${totalQuestions} on the Quiz App!`;
+    if (navigator.share) {
+      navigator.share({
+        title: 'Quiz App Results',
+        text: shareText,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);
+      alert('Results copied to clipboard!');
+    }
+  };
+
   return (
     <main className="flex flex-col items-center min-h-screen p-6 bg-background">
       <h1 className="text-2xl font-bold text-foreground mb-6">Quiz Results</h1>
@@ -62,6 +76,13 @@ export default function ResultsPage() {
           onClick={handleRetakeQuiz}
         >
           Retake Quiz
+        </Button>
+        <Button
+          variant="default"
+          className="w-full mt-4"
+          onClick={handleShareResults}
+        >
+          Share Results
         </Button>
       </Card>
     </main>
